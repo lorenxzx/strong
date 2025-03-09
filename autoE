@@ -1,0 +1,9 @@
+local VirtualInputManager = game:GetService("VirtualInputManager")
+
+while true do
+    -- Simula pressionar e soltar "E" rapidamente em loop
+    VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.E, false, game)
+    wait()  -- Pequeno delay para garantir que a interação ocorra
+    VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.E, false, game)
+    wait(0.05)  -- Pequeno intervalo antes de repetir (ajuste se necessário)
+end
