@@ -1,0 +1,108 @@
+-- game 1
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+local Window = Fluent:CreateWindow({
+    Title = "Strong Man",
+    SubTitle = "|by lorenzo🤷",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(450, 320),
+    Acrylic = true,
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl
+})
+
+local Tabs = {
+    Autofarm = Window:AddTab({ Title = "Auto Farm", Icon = "sword" }),
+}
+
+local Options = Fluent.Options
+
+-- Toggle para Auto Farm
+local autoFarmEnabled = false
+
+-- Função para iniciar o auto farm
+local function startAutoFarm()
+    loadstring(game:HttpGet("loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()"))()
+    while autoFarmEnabled do
+        local TweenService = game:GetService("TweenService")
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local camera = workspace.CurrentCamera
+        
+        -- Configurações
+        local targetPosition = Vector3.new(2484.07861, 41.2105713, 4818.88525)
+        local moveDuration = 2 -- Duração do movimento em segundos
+        local draggableFolder = workspace.PlayerDraggables:FindFirstChild("8010626437")
+        
+        -- Função para mover objetos com Tween
+        local function smoothMove(object, targetPos)
+            if not object:IsA("BasePart") then
+                if object:IsA("Model") and object.PrimaryPart then
+                    object = object.PrimaryPart
+                else
+                    return
+                end
+            end
+        
+            -- Cria o Tween
+            local tweenInfo = TweenInfo.new(
+                moveDuration,
+                Enum.EasingStyle.Quad,
+                Enum.EasingDirection.Out
+            )
+            
+            local tween = TweenService:Create(object, tweenInfo, {
+                Position = Vector3.new(targetPos.X, object.Position.Y, targetPos.Z)
+            })
+            
+            tween:Play()
+            return tween
+        end
+        
+        -- Movimenta o personagem
+        local function moveCharacter()
+            local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+            local bodyPos = Instance.new("BodyPosition")
+            bodyPos.Position = Vector3.new(targetPosition.X, humanoidRootPart.Position.Y, targetPosition.Z)
+            bodyPos.MaxForce = Vector3.new(10000, 0, 10000)
+            bodyPos.Parent = humanoidRootPart
+        
+            -- Remove o BodyPosition após chegar
+            delay(moveDuration, function()
+                bodyPos:Destroy()
+            end)
+        end
+        
+        -- Movimenta todos os objetos
+        local function moveAll()
+            if draggableFolder then
+                for _, obj in pairs(draggableFolder:GetChildren()) do
+                    smoothMove(obj, targetPosition)
+                end
+            end
+            moveCharacter()
+        end
+        
+        moveAll()
+        wait(2.1)
+    end
+end
+
+-- Função para parar o Auto Farm
+local function stopAutoFarm()
+    -- Interrompe o auto farm
+    autoFarmEnabled = false
+end
+
+-- Toggle button para ativar/desativar o Auto Farm
+Tabs.Autofarm:AddToggle({
+    Title = "Auto Energy",
+    Default = false,
+    Callback = function(state)
+        autoFarmEnabled = state
+        if autoFarmEnabled then
+            startAutoFarm() -- Inicia o Auto Farm
+        end
+    end
+})
